@@ -23,7 +23,7 @@ class DiarizationPipeline:
         model_config = model_name or "pyannote/speaker-diarization-3.1"
         logger.info(f"Loading diarization model: {model_config}")
         self.model = Pipeline.from_pretrained(
-            model_config, use_token=use_auth_token
+            model_config, token=use_auth_token
         ).to(device)
 
     def __call__(
