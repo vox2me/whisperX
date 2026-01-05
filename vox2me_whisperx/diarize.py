@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from pyannote.audio import Pipeline
-from typing import Optional, Union
+from typing import Optional, Union, Callable
 import torch
 
 from vox2me_whisperx.audio import load_audio, SAMPLE_RATE
@@ -33,6 +33,8 @@ class DiarizationPipeline:
         min_speakers: Optional[int] = None,
         max_speakers: Optional[int] = None,
         return_embeddings: bool = False,
+        print_progress: bool = False,
+        progress_callback: Optional[Callable[[float, str], None]] = None,
     ) -> Union[tuple[pd.DataFrame, Optional[dict[str, list[float]]]], pd.DataFrame]:
         """
         Perform speaker diarization on audio.
@@ -57,11 +59,27 @@ class DiarizationPipeline:
             "sample_rate": SAMPLE_RATE,
         }
 
+        def progress_hook(step_name, step_artifact, file=None, total=None, completed=None):
+            if step_name != 'embeddings':
+                return
+
+            if completed is None:
+                completed = total = 1
+
+            percent = (completed / total) * 100
+
+            if print_progress:
+                print(f"Performing diarization {step_name}...")
+                print(f"Progress: {percent:.2f}%...")
+            if progress_callback:
+                progress_callback(percent, 'diarization')
+
         output = self.model(
             audio_data,
             num_speakers=num_speakers,
             min_speakers=min_speakers,
             max_speakers=max_speakers,
+            hook=progress_hook,
         )
 
         diarization = output.speaker_diarization

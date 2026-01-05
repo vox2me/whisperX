@@ -76,6 +76,7 @@ DEFAULT_ALIGN_MODELS_HF = {
     "kk": "aismlv/wav2vec2-large-xlsr-kazakh",
     "bg": "infinitejoy/wav2vec2-large-xls-r-300m-bulgarian",
     "sv": "KBLab/wav2vec2-large-voxrex-swedish",
+    "hy": "infinitejoy/wav2vec2-large-xls-r-300m-armenian"
 }
 
 
