@@ -27,6 +27,7 @@ dependencies = [
 ]
 
 
+
 [project.scripts]
 vox2me_whisperx = "vox2me_whisperx.transcribe:cli"
 
